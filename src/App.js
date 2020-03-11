@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -15,22 +15,16 @@ import Header from './components/header/header';
 import { selectCurrentUser } from './redux/user/user.selectors';
 import {checkUserSession} from './redux/user/user.actions';
 
-class App extends React.Component {
-  unsubscribeFromAuth = null; 
+const App = ({checkUserSession,currentUser}) => {
+  /*instead of componentDidMount()*/
+  useEffect(() => {
+    checkUserSession()
+  },[checkUserSession]);
+  /*[] mean trigger one time only when component mount
+  but in this case it trigger 2 times so we use [checkUserSession]
+  which mean trigger when checkUserSession updates but in our
+  case it updates one when we did mount*/
   
-  componentDidMount(){
-    const {checkUserSession} = this.props;
-    checkUserSession();
-  }
-  
-  // /*we have to close subscription when unmount because we don't want memory leaks in our js app
-  // related to listeners still being open even if the component that cares about the listener is no longer on the page*/
-   componentWillUnmount(){
-     this.unsubscribeFromAuth();
-   }
-
-  render(){
-    const {currentUser} = this.props;
     return (
       <div>
         <Header />
@@ -55,7 +49,6 @@ class App extends React.Component {
       </div>
     );
   }
-}
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser

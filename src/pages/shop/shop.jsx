@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import {Route} from 'react-router-dom';
 import {connect} from 'react-redux';
 
@@ -7,16 +7,18 @@ import { fetchCollectionsStart } from '../../redux/shop/shop.actions';
 import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
 import CollectionPageContainer from '../collection/collection.container';
 
-class ShopPage extends React.Component{
-  componentDidMount(){
-   const {fetchCollectionsStart} = this.props;
-   fetchCollectionsStart();
-  }
+  /*we have access to match object because 
+<Route path='/shop' component={ShopPage} /> which in App.js*/
+const ShopPage = ({fetchCollectionsStart,match}) =>{
+  useEffect(() => {
+    fetchCollectionsStart();
+  },[fetchCollectionsStart]);
+  /*we don't use [] which trigger fetchCollectionsStart once
+   because we will get warning in console and the reason
+  is becasue our function fetchCollectionsStart being passed in as a prop
+  but we know that fetchCollectionsStart will not change
+  */
 
- render(){ 
-   const {match} = this.props;
-   /*we have access to match object because 
-  <Route path='/shop' component={ShopPage} /> which in App.js*/
   return(
   <div className='shop-page'>
     <Route exact path={`${match.path}`} component={CollectionsOverviewContainer} />
@@ -24,7 +26,6 @@ class ShopPage extends React.Component{
   </div>
   );
  }
-}
 
 const mapDispatchToProps = dispatch =>({
   fetchCollectionsStart: () => dispatch(fetchCollectionsStart())
