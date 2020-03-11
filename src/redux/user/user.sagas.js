@@ -41,6 +41,7 @@ export function* signInWithEmail({payload: {email,password}}){
    yield getSnapshotFromUserAuth(user);
   }catch(error){
     yield put(signInFailure(error));
+    yield alert("Wrong Credentials");
   }
 }
 
@@ -57,9 +58,9 @@ export function* isUserAuthenticated(){
 export function* signOut(){
   try{
     yield auth.signOut();
-    yield put(signOutSuccess())
+    yield put(signOutSuccess());
   }catch(error){
-    yield put(signOutFailure(error))
+    yield put(signOutFailure(error));
   }
 }
 
@@ -72,7 +73,8 @@ try{
   yield getSnapshotFromUserAuth(user,{displayName});
   /*to signIn after you signUp*/
  }catch(error){
-   yield put(signUpFailure(error))
+   yield put(signUpFailure(error));
+   yield alert(error);
  }
 }
 
@@ -97,7 +99,7 @@ export function* onSignOutStart(){
 }
 
 export function* onSignUpStart(){
-  yield takeLatest(UserActionTypes.SIGN_UP_START,signUp)
+  yield takeLatest(UserActionTypes.SIGN_UP_START,signUp);
 }
 
 /*export function* onSignUpSuccess(){
@@ -113,4 +115,4 @@ export function* userSagas(){
        call(onSignUpStart)
        /*call(onSignUpSuccess)*/
     ]);
-}
+};
