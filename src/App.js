@@ -18,7 +18,10 @@ import {checkUserSession} from './redux/user/user.actions';
 const App = ({checkUserSession,currentUser}) => {
   /*instead of componentDidMount()*/
   useEffect(() => {
-    checkUserSession()
+    const unsubscribeFromAuth = checkUserSession();
+    return () =>{//clean-up function to unsubscirbe listeners when unmount
+      unsubscribeFromAuth();
+    }
   },[checkUserSession]);
   /*[] mean trigger one time only when component mount
   but in this case it trigger 2 times so we use [checkUserSession]
